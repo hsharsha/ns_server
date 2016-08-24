@@ -221,7 +221,7 @@ supported_services() ->
 
 supported_services_for_version(CompatVersion) ->
     Services0 = [kv],
-    case cluster_compat_mode:is_version_40(CompatVersion) of
+    Svc = case cluster_compat_mode:is_version_40(CompatVersion) of
         true ->
             Services1 = [n1ql, index] ++ Services0,
             case cluster_compat_mode:is_version_45(CompatVersion) of
@@ -232,7 +232,8 @@ supported_services_for_version(CompatVersion) ->
             end;
         false ->
             Services0
-    end.
+    end,
+    Svc ++ [ciad].
 
 -ifdef(EUNIT).
 supported_services_for_version_test() ->

@@ -166,6 +166,8 @@ build_services(Node, Config, EnabledServices) ->
                  ];
              fts ->
                  [{fts, ns_config:search(Config, {node, Node, fts_http_port}, undefined)}];
+             ciad ->
+                 [];
              example ->
                  []
          end || S <- EnabledServices],

@@ -273,9 +273,35 @@ dynamic_children(normal) ->
              per_bucket_moxi_specs(Config),
              maybe_create_ssl_proxy_spec(Config),
              run_via_goport(fun fts_spec/1, Config),
+             run_via_goport(fun eventing_node_spec/1, Config),
              run_via_goport(fun example_service_spec/1, Config)],
 
     lists:flatten(Specs).
+
+eventing_node_spec(Config) ->
+    case ns_cluster_membership:should_run_service(Config, n1ql, node()) of
+        false ->
+            [];
+        _ ->
+            LocalMemcachedPort = ns_config:search_node_prop(node(), Config, memcached, port),
+            RestPort = misc:node_rest_port(Config, node()),
+            Command = path_config:component_path(bin, "go_eventing"),
+            AuthArg = "-auth=Administrator:asdasd",
+            KVAddrArg = "-kvaddrs=127.0.0.1:" ++ integer_to_list(LocalMemcachedPort),
+            BucketArg = "-buckets=default",
+            LogArg = "-info",
+            RestArg = "127.0.0.1:" ++ integer_to_list(RestPort),
+  
+            Spec = {'query', Command,
+                    [AuthArg, KVAddrArg, BucketArg, LogArg, RestArg],
+                    %% [KVAddrArg, BucketArg, LogArg, RestArg],
+                    [use_stdio, exit_status, stderr_to_stdout, stream,
+                     {env, build_go_env_vars(Config, 'eventing')},
+                     {log, "eventing.log"}]},
+            io:format("ABHI: Eventing Spec -> ~p~n", [Spec]),
+            [Spec]
+    end.
+
 
 query_node_spec(Config) ->
     case ns_cluster_membership:should_run_service(Config, n1ql, node()) of
@@ -304,7 +330,7 @@ query_node_spec(Config) ->
                     [use_stdio, exit_status, stderr_to_stdout, stream,
                      {env, build_go_env_vars(Config, 'cbq-engine')},
                      {log, ?QUERY_LOG_FILENAME}]},
-
+            io:format("ABHI: Query Spec -> ~p~n", [Spec]),
             [Spec]
     end.
 
