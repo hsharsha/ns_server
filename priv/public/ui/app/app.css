@@ -99,7 +99,7 @@ a.dynamic_disabled{text-decoration:none;cursor:default;}
 #headerNav .contents{width:1060px;margin:auto;}
 #headerNav ul {margin-left: 37px;}
 #headerNav ul li {float:left;position:relative}
-#headerNav li a {display:block;text-decoration:none;padding:13px 23px 7px;line-height:27px}
+#headerNav li a {display:block;text-decoration:none;padding:13px 12px 7px;line-height:27px}
 #headerNav li:hover {background:url('/images/active_hover_bg.png') repeat-x;}
 #headerNav li.currentNav {background:url('/images/active_bg.png') no-repeat center;}
 /* to position the badges in the navigation correctly */
