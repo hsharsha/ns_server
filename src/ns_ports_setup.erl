@@ -279,22 +279,16 @@ dynamic_children(normal) ->
     lists:flatten(Specs).
 
 eventing_node_spec(Config) ->
-    case ns_cluster_membership:should_run_service(Config, n1ql, node()) of
+    case ns_cluster_membership:should_run_service(Config, ciad, node()) of
         false ->
             [];
         _ ->
-            LocalMemcachedPort = ns_config:search_node_prop(node(), Config, memcached, port),
-            RestPort = misc:node_rest_port(Config, node()),
             Command = path_config:component_path(bin, "go_eventing"),
             AuthArg = "-auth=Administrator:asdasd",
-            KVAddrArg = "-kvaddrs=127.0.0.1:" ++ integer_to_list(LocalMemcachedPort),
-            BucketArg = "-buckets=default",
-            LogArg = "-info",
-            RestArg = "127.0.0.1:" ++ integer_to_list(RestPort),
-  
-            Spec = {'query', Command,
-                    [AuthArg, KVAddrArg, BucketArg, LogArg, RestArg],
-                    %% [KVAddrArg, BucketArg, LogArg, RestArg],
+            LogArg = "-info -stats=1000000",
+
+            Spec = {'ciad', Command,
+                    [AuthArg, LogArg],
                     [use_stdio, exit_status, stderr_to_stdout, stream,
                      {env, build_go_env_vars(Config, 'eventing')},
                      {log, "eventing.log"}]},

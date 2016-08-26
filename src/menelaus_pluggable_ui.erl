@@ -220,7 +220,11 @@ port_for(n1ql, Node) ->
     lookup_port(query_port, Node);
 
 port_for(views, Node) ->
-    lookup_port(capi_port, Node).
+    lookup_port(capi_port, Node);
+
+port_for(ciad, _Node) ->
+    io:format("HHS returing ciad port",[]),
+    6061.
 
 lookup_port(Name, Node) ->
     {value, Port} = ns_config:search(ns_config:latest(),
