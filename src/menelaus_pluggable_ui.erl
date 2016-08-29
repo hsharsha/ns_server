@@ -223,7 +223,6 @@ port_for(views, Node) ->
     lookup_port(capi_port, Node);
 
 port_for(ciad, _Node) ->
-    io:format("HHS returing ciad port",[]),
     6061.
 
 lookup_port(Name, Node) ->

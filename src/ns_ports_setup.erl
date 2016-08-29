@@ -285,12 +285,12 @@ eventing_node_spec(Config) ->
         _ ->
             Command = path_config:component_path(bin, "go_eventing"),
             AuthArg = "-auth=Administrator:asdasd",
-            LogArg = "-info -stats=1000000",
+            %%LogArg = "-info -stats=1000000",
 
             Spec = {'ciad', Command,
-                    [AuthArg, LogArg],
+                    [AuthArg],
                     [use_stdio, exit_status, stderr_to_stdout, stream,
-                     {env, build_go_env_vars(Config, 'eventing')},
+                     {env, build_go_env_vars(Config, 'go_eventing')},
                      {log, "eventing.log"}]},
             io:format("ABHI: Eventing Spec -> ~p~n", [Spec]),
             [Spec]
