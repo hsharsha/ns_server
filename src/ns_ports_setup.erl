@@ -285,10 +285,14 @@ eventing_node_spec(Config) ->
         _ ->
             Command = path_config:component_path(bin, "go_eventing"),
             AuthArg = "-auth=Administrator:asdasd",
-            %%LogArg = "-info -stats=1000000",
-
+            LogArg = "-info -stats=1000000",
+            LocalMemcachedPort = ns_config:search_node_prop(node(), Config, memcached, port),
+            RestPort = misc:node_rest_port(Config, node()),
+            KVAddrArg = "-kvaddrs=127.0.0.1:" ++ integer_to_list(LocalMemcachedPort),
+            BucketArg = "-buckets=default",
+            RestArg = "127.0.0.1:" ++ integer_to_list(RestPort),
             Spec = {'ciad', Command,
-                    [AuthArg],
+                    [lists:append([AuthArg, " ", KVAddrArg, " ", BucketArg, " ", LogArg, " ", RestArg])],
                     [use_stdio, exit_status, stderr_to_stdout, stream,
                      {env, build_go_env_vars(Config, 'go_eventing')},
                      {log, "eventing.log"}]},
