@@ -349,6 +349,7 @@ apply_index_states(SetName, DDocId, Active, Passive, Cleanup,
 
         %% this should go first because some of the replica vbuckets might
         %% need to be cleaned up from main index
+        ?log_info("Active partition ~p ~n Passive partition ~p ~n Cleanup partition ~p ~n", [Active, Passive, Cleanup]),
         ?csv_call_all(set_partition_states,
                       SetName, DDocId, [Active, Passive, Cleanup]),
 
